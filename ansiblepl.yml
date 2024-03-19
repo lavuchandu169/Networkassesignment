@@ -1,0 +1,21 @@
+---
+- name: Deploy httpd container with Git installed
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Pull httpd Docker image
+      docker_image:
+        name: httpd
+        source: pull
+
+    - name: Install Git inside the container
+      docker_container:
+        name: my_httpd_container
+        image: httpd
+        state: started
+        ports:
+          - "8080:80"
+        command: /bin/bash -c "apt-get update && apt-get install -y git && httpd-foreground"
+
